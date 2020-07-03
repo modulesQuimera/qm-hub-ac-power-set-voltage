@@ -44,10 +44,10 @@ module.exports = function(RED) {
         }
         else{
             res.json([
-                {value:"A", label: "VA - ", hasValue:false},
-                {value:"B", label: "VB - ", hasValue:false},
-                {value:"C", label: "VC - ", hasValue:false},
-                {value:"*", label: "IABC - ", hasValue:false},
+                {label: "VA - ", value:"A",  hasValue:false},
+                {label: "VB - ", value:"B" , hasValue:false},
+                {label: "VC - ",value:"C", hasValue:false},
+                {label: "IABC - ", value:"*" , hasValue:false},
             ])
         }
     });

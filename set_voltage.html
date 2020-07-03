@@ -1,18 +1,24 @@
 <script type="text/javascript">
     RED.nodes.registerType('set_voltage',{
         category: 'AC Power Module',
-        color: '#D2691E',
+        color: '#FA8072',
         defaults: {
-            name:{ value: "" },
-            message_send:{ value:"" },
-            mapeamento:{ value:"", type: "mapeamento" },
-            channel:{ value:""},
+            name:{ 
+                value: ""
+            },
+            mapeamento:{ 
+                value:"", 
+                type: "mapping-voltage"
+            },
+            channel:{ 
+                value:""
+            },
         },
         inputs:1,
         outputs:1,
-        icon: "font-awesome/fa-bars",
-        label: function() { return this.name || "set_voltage" },
-        paletteLabel: "set_voltage",
+        icon: "./icons/Set_Voltage.svg",
+        label: function() { return this.name || "Set Voltage" },
+        paletteLabel: "Set Voltage",
         oneditprepare: function() {
             var ports = []
             var self = this
@@ -32,6 +38,13 @@
                 });
             })
             $("#node-input-mapeamento").val($("#node-input-mapeamento option:first").val());
+        },
+        oneditresize: function() {
+            if(!$("#red-ui-header-button-deploy").hasClass("disabled")){
+                $("#node-dialog-ok").click()
+                $("#red-ui-header-button-deploy").click()
+                $("#red-ui-deploy-dialog-confirm-deploy-deploy").click()
+            }
         },
         oneditsave: function() {
             var mytype = $("#node-config-input-port").typedInput('type');
