@@ -10,9 +10,12 @@
                 value:"", 
                 type: "mapping-voltage"
             },
-            channel:{ 
+            phase_selector:{ 
                 value:""
             },
+            tesion_value:{
+                value:""
+            }
         },
         inputs:1,
         outputs:1,
@@ -27,13 +30,13 @@
                 ports = data  
                 var portType = "custom";
                 for (var i in ports) {
-                    if (self.channel == ports[i].value) {
-                        portType = self.channel;
+                    if (self.phase_selector == ports[i].value) {
+                        portType = self.phase_selector;
                         console.log(ports[i].label)
                     }
                 }
                 $("#node-config-input-port").typedInput({
-                    default: self.channel,
+                    default: self.phase_selector,
                     types:ports
                 });
             })
@@ -65,11 +68,15 @@
     </div>
     <br>
     <div class="form-row">
-        <label for="node-input-channel"><i class="fa fa-bars" aria-hidden="true"></i></i> Channel</label>
+        <label for="node-input-phase_selector"><i class="fa fa-bars" aria-hidden="true"></i></i> Phase selector</label>
         <input type="text" id="node-config-input-port" style="width:64%">
         <div style="width:20px; margin-left:420px; margin-top:-34px">
             <input type="text" id="node-input-mapeamento" placeholder="mapeamento">
         </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-tension_value"><i class="fa fa-tag" aria-hidden="true"></i></i> Tension Value</label>
+        <input type="number" step="any" min="0" max="300" id="node-input-tension_value" placeholder="tension_value" style="width:32%; margin-left: -40px">
     </div>
 </script>
 

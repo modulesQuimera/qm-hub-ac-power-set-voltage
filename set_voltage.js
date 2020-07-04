@@ -6,7 +6,8 @@ module.exports = function(RED) {
     function SetVoltageNode(config) {
         RED.nodes.createNode(this, config);
         this.mapeamento = config.mapeamento
-        this.channel = config.channel
+        this.phase_selector = config.channel
+        this.tesion_value = config.tesion_value
 
         var node = this
         mapeamentoNode = RED.nodes.getNode(this.mapeamento);
@@ -19,7 +20,8 @@ module.exports = function(RED) {
                 type: "AC_Power_Source_modular_V1.0",
                 slot: 1,
                 method: "set_voltage",
-                channel: node.channel
+                phase_selector: node.phase_selector,
+                tesion_value: parseFloat(tension_value),
             }
             var file = globalContext.get("exportFile")
             var slot = globalContext.get("slot");
