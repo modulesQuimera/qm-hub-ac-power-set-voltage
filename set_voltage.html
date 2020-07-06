@@ -60,13 +60,54 @@
     });
 
 </script>
+<style>
+
+
+    label{
+        width: 50% !important;
+        margin-bottom: 2px !important;
+    }
+
+    .columm{
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    hr {
+    width: 40% !important;
+    float: left !important;
+    }
+
+    .hr-div-voltages{
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-top: 220px !important;
+    }
+
+    .optional{
+        height: max-content !important;
+        margin-top: 10px !important;
+    }
+
+    .descript{
+        text-align: center;
+    }
+
+</style>
 
 <script type="text/html" data-template-name="set_voltage">
+    <div class="form-row columm">
+        <strong class="descript">
+           This component makes value assignments for the voltages for the chosen phase.
+        </strong>
+    </div>
+
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <br>
+    
     <div class="form-row">
         <label for="node-input-phase_selector"><i class="fa fa-bars" aria-hidden="true"></i></i> Phase selector</label>
         <input type="text" id="node-config-input-port" style="width:64%">
@@ -74,9 +115,21 @@
             <input type="text" id="node-input-mapeamento" placeholder="mapeamento">
         </div>
     </div>
+
     <div class="form-row">
         <label for="node-input-tension_value"><i class="fa fa-tag" aria-hidden="true"></i></i> Tension Value</label>
         <input type="number" step="any" min="0" max="300" id="node-input-tension_value" placeholder="tension_value" style="width:32%; margin-left: -40px">
+    </div>
+
+    <div class="hr-div-voltages">
+        <hr>
+        <span class="optional">Optional</span>
+        <hr>
+    </div>
+
+    <div class="form-row columm">
+        <label style="width: 50% !important;" for="node-input-name" ><i class="fa fa-tag"></i> Component Nickname</label>
+        <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
 
