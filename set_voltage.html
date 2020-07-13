@@ -1,68 +1,39 @@
 <script type="text/javascript">
-    RED.nodes.registerType('set_voltage',{
+    RED.nodes.registerType('set_voltages',{
         category: 'AC Power Module',
         color: '#FA8072',
         defaults: {
             name:{ 
-                value: ""
-            },
-            mapeamento:{ 
-                value:"", 
-                type: "mapping-voltage"
-            },
-            phase_selector:{ 
+                value: "" },
+            phase_A:{
                 value:""
             },
-            tesion_value:{
+            phase_B:{
                 value:""
-            }
+            },
+            phase_C:{
+                value:""
+            },
+            slot:{value:"", required:true}
         },
         inputs:1,
         outputs:1,
-        icon: "Set_Voltage.svg",
-        label: function() { return this.name || "Set Voltage" },
-        paletteLabel: "Set Voltage",
+        icon: "Set_Voltages.svg",
+        label: function() { return this.name || "Set Voltages" },
+        paletteLabel: "Set Voltages",
         oneditprepare: function() {
-            var ports = []
-            var self = this
-
             $.getJSON('getMapeamentoACPower',function(data) {
-                ports = data  
-                var portType = "custom";
-                for (var i in ports) {
-                    if (self.phase_selector == ports[i].value) {
-                        portType = self.phase_selector;
-                        console.log(ports[i].label)
-                    }
-                }
-                $("#node-config-input-port").typedInput({
-                    default: self.phase_selector,
-                    types:ports
-                });
+                console.log(data)
+                document.getElementById("VA").innerText = data[0].label;
+                document.getElementById("VB").innerText = data[1].label;
+                document.getElementById("VC").innerText = data[2].label;
             })
-            $("#node-input-mapeamento").val($("#node-input-mapeamento option:first").val());
         },
-        oneditresize: function() {
-            if(!$("#red-ui-header-button-deploy").hasClass("disabled")){
-                $("#node-dialog-ok").click()
-                $("#red-ui-header-button-deploy").click()
-                $("#red-ui-deploy-dialog-confirm-deploy-deploy").click()
-            }
-        },
-        oneditsave: function() {
-            var mytype = $("#node-config-input-port").typedInput('type');
-
-            console.log(mytype)
-
-            $("#node-config-input-port").typedInput('value', mytype);
-            this.phase_selector = $("#node-config-input-port").typedInput('value');
-        }
-    });
-
+    });    
 </script>
+
+
 <style>
-
-
     label{
         width: 50% !important;
         margin-bottom: 2px !important;
@@ -95,30 +66,40 @@
 
 </style>
 
-<script type="text/html" data-template-name="set_voltage">
+<script type="text/html" data-template-name="set_voltages">
+
     <div class="form-row columm">
         <strong class="descript">
-           This component makes value assignments for the voltages for the chosen phase.
+           This component makes value assignments for the voltages of each phase.
         </strong>
     </div>
-
     <div class="form-row columm">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label  for="node-input-slot"><i class="fa fa-sliders"></i> Slot</label>
+        <input type="number" min="0" id="node-input-slot" style="width:20%;">
     </div>
-    <br>
-    
     <div class="form-row columm">
-        <label for="node-input-phase_selector"><i class="fa fa-bars" aria-hidden="true"></i></i> Phase selector</label>
-        <input type="text" id="node-config-input-port" style="width:39%">
-        <div style="width:20px; margin-left:200px; margin-top:-34px" selected>
-            <input type="text" id="node-input-mapeamento" placeholder="mapeamento">
+        <div class="form-row ">
+            <div>
+                <label for="node-input-phase_A" id="VA"><i class="fa fa-expand"></i></label>
+            </div>
+            <input type="number" step="any" min="0" max="300" id="node-input-phase_A" placeholder="phase_A" style="width:39%;">
         </div>
     </div>
-
     <div class="form-row columm">
-        <label for="node-input-tension_value"><i class="fa fa-tag" aria-hidden="true"></i></i> Tension Value</label>
-        <input type="number" step="any" min="0" max="300" id="node-input-tension_value" placeholder="0-300" style="width:39%">
+        <div class="form-row ">
+            <div>
+                <label for="node-input-phase_B" id="VB"><i class="fa fa-expand"></i></label>
+            </div>
+            <input type="number" step="any" min="0" max="300" id="node-input-phase_B" placeholder="phase_B" style="width:39%;">
+        </div>
+    </div>
+    <div class="form-row columm">
+        <div class="form-row ">
+            <div>
+                <label for="node-input-phase_C" id="VC"><i class="fa fa-expand"></i></label>
+            </div>
+            <input type="number" step="any" min="0" max="300" id="node-input-phase_C" placeholder="phase_C" style="width:39%;">
+        </div>
     </div>
 
     <div class="hr-div-voltages">
@@ -133,6 +114,8 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="set_voltage">
+<script type="text/html" data-help-name="set_voltages">
     <p>Working on it...</p>
 </script>
+
+
