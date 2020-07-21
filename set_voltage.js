@@ -5,11 +5,11 @@ module.exports = function(RED) {
 
     function SetVoltageNode(config) {
         RED.nodes.createNode(this, config);
-        this.mapeamento = config.mapeamento
-        this.phase_selector = config.channel
-        this.tesion_value = config.tesion_value
+        this.mapeamento = config.mapeamento;
+        this.phase_selector = config.phase_selector;
+        this.tesion_value = config.tesion_value;
 
-        var node = this
+        var node = this;
         mapeamentoNode = RED.nodes.getNode(this.mapeamento);
         
         node.on('input', function(msg, send, done) {
@@ -17,20 +17,37 @@ module.exports = function(RED) {
             // var exportMode = globalContext.get("exportMode");
             var currentMode = globalContext.get("currentMode");
             var command = {
-                type: "AC_Power_Source_modular_V1.0",
-                slot: 1,
+                type: "AC_Power_Source_modular_V1_0",
+                slot: parseInt(mapeamentoNode.slot),
                 method: "set_voltage",
                 phase_selector: node.phase_selector,
-                tesion_value: parseFloat(tension_value),
-            }
-            var file = globalContext.get("exportFile")
+                tesion_value: parseFloat(node.tesion_value),
+                get_output: {},
+                compare: {}
+            };
+            var file = globalContext.get("exportFile");
             var slot = globalContext.get("slot");
-            if(currentMode == "test"){file.slots[slot].jig_test.push(command)}
-            else{file.slots[slot].jig_error.push(command)}
+            if(!(slot === "begin" || slot === "end")){
+                if(currentMode == "test"){
+                    file.slots[slot].jig_test.push(command);
+                }
+                else{
+                    file.slots[slot].jig_error.push(command);
+                }
+            }
+            else{
+                if(slot === "begin"){
+                    file.slots[0].jig_test.push(command);
+                    // file.begin.push(command);
+                }
+                else{
+                    file.slots[3].jig_test.push(command);
+                    // file.end.push(command);
+                }
+            }
             globalContext.set("exportFile", file);
-            node.status({fill:"green", shape:"dot", text:"done"}); // seta o status pra waiting
-            // msg.payload = command
-            send(msg)
+            console.log(command);
+            send(msg);
         });
     }
     RED.nodes.registerType("set_voltage", SetVoltageNode);
@@ -42,7 +59,7 @@ module.exports = function(RED) {
                 {value:mapeamentoNode.valuePort2, label: "VB - " + mapeamentoNode.labelPort2, hasValue:false},
                 {value:mapeamentoNode.valuePort3, label: "VC - " + mapeamentoNode.labelPort3, hasValue:false},
                 {value:mapeamentoNode.valuePort4, label: "IABC - " + mapeamentoNode.labelPort4, hasValue:false},
-            ])
+            ]);
         }
         else{
             res.json([
@@ -50,7 +67,7 @@ module.exports = function(RED) {
                 {label: "VB - ", value:"B" , hasValue:false},
                 {label: "VC - ",value:"C", hasValue:false},
                 {label: "IABC - ", value:"*" , hasValue:false},
-            ])
+            ]);
         }
     });
-}
+};
