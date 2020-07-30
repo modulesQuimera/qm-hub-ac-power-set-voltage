@@ -1,162 +1,876 @@
 <script type="text/javascript">
-    RED.nodes.registerType('set_voltage',{
+    RED.nodes.registerType('set_voltage', {
         category: 'AC Power Module',
         color: '#FA8072',
         defaults: {
-            name:{ 
-                value: ""
-            },
-            mapeamento:{ 
-                value:"", 
-                type: "mapping-voltage"
-            },
-            phase_selector:{ 
-                value:""
-            },
-            tesion_value:{
-                value:""
-            },
+            name: { value: "" },
+            mapeamento: { value: "", type: "mapping-voltage" },
+            phase_selector: { value: "" },
+            tesion_value: { value: "" },
+
+            qtdSetVoltage: { value: 0 },
+            controle: { value: 0 },
+            phase_selector1: { value: "" }, tesion_value1: { value: "" },
+            phase_selector2: { value: "" }, tesion_value2: { value: "" },
+            phase_selector3: { value: "" }, tesion_value3: { value: "" },
+            phase_selector4: { value: "" }, tesion_value4: { value: "" },
+            phase_selector5: { value: "" }, tesion_value5: { value: "" },
+            phase_selector6: { value: "" }, tesion_value6: { value: "" },
+            phase_selector7: { value: "" }, tesion_value7: { value: "" },
+            phase_selector8: { value: "" }, tesion_value8: { value: "" },
+            phase_selector9: { value: "" }, tesion_value9: { value: "" },
+            phase_selector10: { value: "" }, tesion_value10: { value: "" },
+            phase_selector11: { value: "" }, tesion_value11: { value: "" },
+            phase_selector12: { value: "" }, tesion_value12: { value: "" },
+            phase_selector13: { value: "" }, tesion_value13: { value: "" },
+            phase_selector14: { value: "" }, tesion_value14: { value: "" },
+            phase_selector15: { value: "" }, tesion_value15: { value: "" },
+            phase_selector16: { value: "" }, tesion_value16: { value: "" },
+            phase_selector17: { value: "" }, tesion_value17: { value: "" },
+            phase_selector18: { value: "" }, tesion_value18: { value: "" },
+            phase_selector19: { value: "" }, tesion_value19: { value: "" },
+            phase_selector20: { value: "" }, tesion_value20: { value: "" },
+            phase_selector21: { value: "" }, tesion_value21: { value: "" },
+            phase_selector22: { value: "" }, tesion_value22: { value: "" },
+            phase_selector23: { value: "" }, tesion_value23: { value: "" },
+            phase_selector24: { value: "" }, tesion_value24: { value: "" },
         },
-        inputs:1,
-        outputs:1,
+        inputs: 1,
+        outputs: 1,
         icon: "AC_Power.svg",
-        label: function() { return this.name? "Set Voltage - " + this.name: "Set Voltage" },
+        label: function () { return this.name ? "Set Voltage - " + this.name : "Set Voltage" },
         paletteLabel: "Set Voltage",
-        oneditprepare: function() {
+        oneditprepare: function () {
+            var self = this;
+            self.controle = self.qtdSetVoltage;
+
+            for (var i = 1; i <= self.controle; i++) {
+                $(".setVoltage" + i).show();
+            }
+            if (!self.controle || self.controle < 0) {
+                self.controle = 0;
+            }
+            $("#addSetVoltage").click(function () {
+                self.controle = self.controle + 1 <= 24 ? self.controle + 1 : 24;
+
+                $(".setVoltage" + self.controle).show();
+                console.log(self.controle);
+            });
+            $("#remSetVoltage").click(function () {
+                $(".setVoltage" + self.controle).hide();
+                self.controle = self.controle - 1 >= 0 ? self.controle - 1 : 0;
+                console.log(self.controle);
+            });
+
             var ports = []
-            var self = this
             var config_mapeamento = RED.nodes.node(this.mapeamento)
-            // console.log(config_mapeamento)
-            if(config_mapeamento){
+            if (config_mapeamento) {
                 ports = [
-                    {value:config_mapeamento.valuePort1, label: "VA - " + config_mapeamento.labelPort1, hasValue:false},
-                    {value:config_mapeamento.valuePort2, label: "VB - " + config_mapeamento.labelPort2, hasValue:false},
-                    {value:config_mapeamento.valuePort3, label: "VC - " + config_mapeamento.labelPort3, hasValue:false},
-                    {value:config_mapeamento.valuePort4, label: "IABC - " + config_mapeamento.labelPort4, hasValue:false},
+                    { value: config_mapeamento.valuePort1, label: "VA - " + config_mapeamento.labelPort1, hasValue: false },
+                    { value: config_mapeamento.valuePort2, label: "VB - " + config_mapeamento.labelPort2, hasValue: false },
+                    { value: config_mapeamento.valuePort3, label: "VC - " + config_mapeamento.labelPort3, hasValue: false },
+                    { value: config_mapeamento.valuePort4, label: "IABC - " + config_mapeamento.labelPort4, hasValue: false },
                 ];
-                for (var i in ports) {
-                    if (self.phase_selector == ports[i].value) {
-                        portType = self.phase_selector;
-                        console.log(ports[i].label)
-                    }
-                }
-                $("#node-config-input-port").typedInput({
-                    default: self.phase_selector,
-                    types:ports
-                });
+
+
             }
-            else{
+            else {
                 ports = [
-                    {label: "VA - ", value:"A",  hasValue:false},
-                    {label: "VB - ", value:"B" , hasValue:false},
-                    {label: "VC - ",value:"C", hasValue:false},
-                    {label: "IABC - ", value:"*" , hasValue:false},
+                    { label: "VA - ", value: "A", hasValue: false },
+                    { label: "VB - ", value: "B", hasValue: false },
+                    { label: "VC - ", value: "C", hasValue: false },
+                    { label: "IABC - ", value: "*", hasValue: false },
                 ];
-                for (var i in ports) {
-                    if (self.phase_selector == ports[i].value) {
-                        portType = self.phase_selector;
-                        console.log(ports[i].label)
-                    }
-                }
-                $("#node-config-input-port").typedInput({
-                    default: self.phase_selector,
-                    types:ports
-                });
+
             }
+            $("#node-config-input-port").typedInput({
+                default: self.phase_selector,
+                types: ports
+            });
+            $("#node-config-input-port1").typedInput({
+                default: self.phase_selector1,
+                types: ports
+            });
+            $("#node-config-input-port2").typedInput({
+                default: self.phase_selector2,
+                types: ports
+            });
+            $("#node-config-input-port3").typedInput({
+                default: self.phase_selector3,
+                types: ports
+            });
+            $("#node-config-input-port4").typedInput({
+                default: self.phase_selector4,
+                types: ports
+            });
+            $("#node-config-input-port5").typedInput({
+                default: self.phase_selector5,
+                types: ports
+            });
+            $("#node-config-input-port6").typedInput({
+                default: self.phase_selector6,
+                types: ports
+            });
+            $("#node-config-input-port7").typedInput({
+                default: self.phase_selector7,
+                types: ports
+            });
+            $("#node-config-input-port8").typedInput({
+                default: self.phase_selector8,
+                types: ports
+            });
+            $("#node-config-input-port9").typedInput({
+                default: self.phase_selector9,
+                types: ports
+            });
+            $("#node-config-input-port10").typedInput({
+                default: self.phase_selector10,
+                types: ports
+            });
+            $("#node-config-input-port11").typedInput({
+                default: self.phase_selector11,
+                types: ports
+            });
+            $("#node-config-input-port12").typedInput({
+                default: self.phase_selector12,
+                types: ports
+            });
+            $("#node-config-input-port13").typedInput({
+                default: self.phase_selector13,
+                types: ports
+            });
+            $("#node-config-input-port14").typedInput({
+                default: self.phase_selector14,
+                types: ports
+            });
+            $("#node-config-input-port15").typedInput({
+                default: self.phase_selector15,
+                types: ports
+            });
+            $("#node-config-input-port16").typedInput({
+                default: self.phase_selector16,
+                types: ports
+            });
+            $("#node-config-input-port17").typedInput({
+                default: self.phase_selector17,
+                types: ports
+            });
+            $("#node-config-input-port18").typedInput({
+                default: self.phase_selector18,
+                types: ports
+            });
+            $("#node-config-input-port19").typedInput({
+                default: self.phase_selector19,
+                types: ports
+            });
+            $("#node-config-input-port20").typedInput({
+                default: self.phase_selector20,
+                types: ports
+            });
+            $("#node-config-input-port21").typedInput({
+                default: self.phase_selector21,
+                types: ports
+            });
+            $("#node-config-input-port22").typedInput({
+                default: self.phase_selector22,
+                types: ports
+            });
+            $("#node-config-input-port23").typedInput({
+                default: self.phase_selector23,
+                types: ports
+            });
+            $("#node-config-input-port24").typedInput({
+                default: self.phase_selector24,
+                types: ports
+            });
         },
-        oneditresize: function() {
-            if(!$("#red-ui-header-button-deploy").hasClass("disabled")){
+        oneditresize: function () {
+            if (!$("#red-ui-header-button-deploy").hasClass("disabled")) {
                 $("#node-dialog-ok").click()
                 $("#red-ui-header-button-deploy").click()
                 $("#red-ui-deploy-dialog-confirm-deploy-deploy").click()
             }
         },
-        oneditsave: function() {
+        oneditsave: function () {
             var mytype = $("#node-config-input-port").typedInput('type');
+            var mytype1 = $("#node-config-input-port1").typedInput('type');
+            var mytype2 = $("#node-config-input-port2").typedInput('type');
+            var mytype3 = $("#node-config-input-port3").typedInput('type');
+            var mytype4 = $("#node-config-input-port4").typedInput('type');
+            var mytype5 = $("#node-config-input-port5").typedInput('type');
+            var mytype6 = $("#node-config-input-port6").typedInput('type');
+            var mytype7 = $("#node-config-input-port7").typedInput('type');
+            var mytype8 = $("#node-config-input-port8").typedInput('type');
+            var mytype9 = $("#node-config-input-port9").typedInput('type');
+            var mytype10 = $("#node-config-input-port10").typedInput('type');
+            var mytype11 = $("#node-config-input-port11").typedInput('type');
+            var mytype12 = $("#node-config-input-port12").typedInput('type');
+            var mytype13 = $("#node-config-input-port13").typedInput('type');
+            var mytype14 = $("#node-config-input-port14").typedInput('type');
+            var mytype15 = $("#node-config-input-port15").typedInput('type');
+            var mytype16 = $("#node-config-input-port16").typedInput('type');
+            var mytype17 = $("#node-config-input-port17").typedInput('type');
+            var mytype18 = $("#node-config-input-port18").typedInput('type');
+            var mytype19 = $("#node-config-input-port19").typedInput('type');
+            var mytype20 = $("#node-config-input-port20").typedInput('type');
+            var mytype21 = $("#node-config-input-port21").typedInput('type');
+            var mytype22 = $("#node-config-input-port22").typedInput('type');
+            var mytype23 = $("#node-config-input-port23").typedInput('type');
+            var mytype24 = $("#node-config-input-port24").typedInput('type');
 
             $("#node-config-input-port").typedInput('value', mytype);
             this.phase_selector = $("#node-config-input-port").typedInput('value');
+
+            $("#node-config-input-port1").typedInput('value', mytype1);
+            this.phase_selector1 = $("#node-config-input-port1").typedInput('value');
+
+            $("#node-config-input-port2").typedInput('value', mytype2);
+            this.phase_selector2 = $("#node-config-input-port2").typedInput('value');
+
+            $("#node-config-input-port3").typedInput('value', mytype3);
+            this.phase_selector3 = $("#node-config-input-port3").typedInput('value');
+
+            $("#node-config-input-port4").typedInput('value', mytype4);
+            this.phase_selector4 = $("#node-config-input-port4").typedInput('value');
+
+            $("#node-config-input-port5").typedInput('value', mytype5);
+            this.phase_selector5 = $("#node-config-input-port5").typedInput('value');
+
+            $("#node-config-input-port6").typedInput('value', mytype6);
+            this.phase_selector6 = $("#node-config-input-port6").typedInput('value');
+
+            $("#node-config-input-port7").typedInput('value', mytype7);
+            this.phase_selector7 = $("#node-config-input-port7").typedInput('value');
+
+            $("#node-config-input-port8").typedInput('value', mytype8);
+            this.phase_selector8 = $("#node-config-input-port8").typedInput('value');
+
+            $("#node-config-input-port9").typedInput('value', mytype9);
+            this.phase_selector9 = $("#node-config-input-port9").typedInput('value');
+
+            $("#node-config-input-port10").typedInput('value', mytype10);
+            this.phase_selector10 = $("#node-config-input-port10").typedInput('value');
+
+            $("#node-config-input-port11").typedInput('value', mytype11);
+            this.phase_selector11 = $("#node-config-input-port11").typedInput('value');
+
+            $("#node-config-input-port12").typedInput('value', mytype12);
+            this.phase_selector12 = $("#node-config-input-port12").typedInput('value');
+
+            $("#node-config-input-port13").typedInput('value', mytype13);
+            this.phase_selector13 = $("#node-config-input-port13").typedInput('value');
+
+            $("#node-config-input-port14").typedInput('value', mytype14);
+            this.phase_selector14 = $("#node-config-input-port14").typedInput('value');
+
+            $("#node-config-input-port15").typedInput('value', mytype15);
+            this.phase_selector15 = $("#node-config-input-port15").typedInput('value');
+
+            $("#node-config-input-port16").typedInput('value', mytype16);
+            this.phase_selector16 = $("#node-config-input-port16").typedInput('value');
+
+            $("#node-config-input-port17").typedInput('value', mytype17);
+            this.phase_selector17 = $("#node-config-input-port17").typedInput('value');
+
+            $("#node-config-input-port18").typedInput('value', mytype18);
+            this.phase_selector18 = $("#node-config-input-port18").typedInput('value');
+
+            $("#node-config-input-port19").typedInput('value', mytype19);
+            this.phase_selector19 = $("#node-config-input-port19").typedInput('value');
+
+            $("#node-config-input-port20").typedInput('value', mytype20);
+            this.phase_selector20 = $("#node-config-input-port20").typedInput('value');
+
+            $("#node-config-input-port21").typedInput('value', mytype21);
+            this.phase_selector21 = $("#node-config-input-port21").typedInput('value');
+
+            $("#node-config-input-port22").typedInput('value', mytype22);
+            this.phase_selector22 = $("#node-config-input-port22").typedInput('value');
+
+            $("#node-config-input-port23").typedInput('value', mytype23);
+            this.phase_selector23 = $("#node-config-input-port23").typedInput('value');
+
+            $("#node-config-input-port24").typedInput('value', mytype24);
+            this.phase_selector24 = $("#node-config-input-port24").typedInput('value');
+
+            this.qtdSetVoltage = this.controle;
         }
     });
 
 </script>
 
-
-
 <style>
-
-    label{
-        width: 50% !important;
+    label {
+        width: 100% !important;
         margin-bottom: 2px !important;
     }
 
-    .columm{
+    .columm {
         display: flex !important;
         flex-direction: column !important;
     }
 
     hr {
-    width: 40% !important;
-    float: left !important;
+        width: 40% !important;
+        float: left !important;
     }
 
-    .hr-div-setVoltage{
+    .hr-div-setVoltage {
         display: flex !important;
         justify-content: space-between !important;
-        margin-top: 250px !important;
+        /* margin-top: 250px !important; */
     }
 
-    .optional{
+    .optional {
         height: max-content !important;
         margin-top: 10px !important;
     }
 
-    .descript{
+    .descript {
         text-align: center;
     }
 
+    .columm {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+
+    .columm-30 {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 30% !important;
+        float: left !important;
+    }
+
+    .columm-50 {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 50% !important;
+        float: left !important;
+    }
+
+
+    .columm-70 {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 70% !important;
+        float: left !important;
+    }
+
+    .descript-div {
+        max-width: 444px !important;
+    }
+
+    span.red-ui-typedInput-type-label {
+        /* background: chartreuse; */
+        /* display: block; */
+        width: 250px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .btn-aln {
+        display: flex !important;
+        flex-direction: row-reverse !important;
+        /* padding-left: 30px; */
+        align-content: center;
+        align-items: flex-end;
+    }
 </style>
 
 <script type="text/html" data-template-name="set_voltage">
-
-    <div class="form-row columm">
+    <div class="form-row columm descript-div">
         <strong class="descript">
             Program a voltage value that will be used.
         </strong>
     </div>
 
-    <!-- <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+    <div style=" position: relative; display:flex; margin-top: 20px;">
+        <div class="form-row columm-70">
+            <label style="width: 50% !important;" for="node-input-name" ><i class="fa fa-tag"></i> Identification Note</label>
+            <input type="text" id="node-input-name" placeholder="Name" style="width: 100%">
+        </div>
+        <div class="form-row columm-30" style="align-items: flex-end !important;">
+            <label style="width: max-content !important; padding-right: 24px;"><i class="fa fa-list-ul"></i> Item</label>
+            <div class="form-row btn-aln" >
+                <a id="addSetVoltage" class="red-ui-button" ><i class="fa fa-plus"></i></a>
+                <a id="remSetVoltage" class="red-ui-button" style="margin-right: 5px;" ><i class="fa fa-minus"></i></a>
+            </div>
+        </div>
     </div>
-    <br> -->
+    <!-- <div class="form-row" style="display:flex; justify-content: space-between;">
+        <button  class="btn-uni btn-add"  type="button" id="addSetVoltage"> <i class="fa fa-plus" style="margin-right: 5px; font-size: 15px;"></i></button>
+        <button class="btn-uni btn-remove"   type="button" id="remSetVoltage"> <i class="fa fa-trash" style="margin-right: 10px; font-size: 15px;"></i></button>
+    </div> -->
+    <div class="hr-div-setVoltage">
+        <hr>
+        <span class="optional">Voltage 0</span>
+        <hr>
+    </div>
+   
+
+    <div class="form-row" style=" position: relative; display:flex;">
+        <div class="form-row columm-70">
+            <label for="node-input-phase_selector"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+            <input type="text" id="node-config-input-port" style="width:100%">
+        </div>
+        <div class="form-row columm-30" style="padding-left: 10px;">
+            <label for="node-input-tesion_value"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+            <input type="number" step="any" min="0" max="300" id="node-input-tesion_value" placeholder="tesion_value" style="width:100%; ">
+        </div>
+    </div>
+
     <div class="form-row columm">
-        <label for="node-input-phase_selector"><i class="fa fa-bars" aria-hidden="true"></i></i> Phase selector</label>
-        <input type="text" id="node-config-input-port" style="width:45%">
-        <!-- <div style="width:20px; margin-left:202px; margin-top:-34px">
-            <input type="text" id="node-input-mapeamento" placeholder="mapeamento">
-        </div> -->
-    </div>
-    <div class="form-row">
-        <label for="node-input-mapeamento"><i class="fa fa-map"></i> Mapping</label>
+        <label for="node-input-mapeamento"><i class="fa fa-map"></i> PCI Connection Map</label>
         <input type="text" id="node-input-mapeamento">
     </div>
-    <div class="form-row columm" style="margin-top: 20px;">
-        <label for="node-input-tesion_value"><i class="fa fa-tag" aria-hidden="true"></i></i> Tension Value</label>
-        <input type="number" step="any" min="0" max="300" id="node-input-tesion_value" placeholder="tesion_value" style="width:32%; ">
+    
+        
+
+
+    
+    <div class="form-row setVoltage1" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 1</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector1"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port1" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value1"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value1" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
     </div>
 
+    <div class="form-row setVoltage2" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 2</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector2"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port2" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value2"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value2" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
 
-    <div class="hr-div-setVoltage">
+    <div class="form-row setVoltage3" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 3</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector3"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port3" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value3"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value3" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage4" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 4</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector4"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port4" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value4"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value4" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage5" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 5</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector5"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port5" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value5"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value5" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage6" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 6</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector6"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port6" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value6"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value6" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage7" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 7</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector7"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port7" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value7"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value7" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage8" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 8</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector8"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port8" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value8"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value8" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage9" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 9</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector9"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port9" style="width:100%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value9"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value9" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage10" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 10</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector10"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port10" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value10"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value10" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage11" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 11</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector11"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port11" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value11"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value11" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage12" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 12</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector12"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port12" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value12"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value12" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage13" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 13</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector13"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port13" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value13"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value13" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage14" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 14</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector14"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port14" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value14"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value14" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage15" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 15</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector15"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port15" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value15"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value15" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage16" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 16</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector16"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port16" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value16"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value16" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage17" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 17</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector17"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port17" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value17"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value17" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage18" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 18</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector18"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port18" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value18"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value18" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage19" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 19</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector19"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port19" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value19"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value19" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage20" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 20</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector20"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port20" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value20"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value20" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage21" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 21</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector21"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port21" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value21"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value21" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage22" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 22</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector22"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port22" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value22"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value22" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage23" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 23</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector23"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port23" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value23"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value23" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row setVoltage24" style="display: none;">
+        <div class="hr-div-setVoltage">
+            <hr>
+            <span class="optional">Voltage 24</span>
+            <hr>
+        </div>
+        <div style=" position: relative; display:flex;">
+            <div class="form-row columm-70">
+                <label for="node-input-phase_selector24"><i class="fa fa-bars" aria-hidden="true"></i> Phase selector</label>
+                <input type="text" id="node-config-input-port24" style="w100th:45%">
+            </div>
+            <div class="form-row columm-30" style="padding-left: 10px;">
+                <label for="node-input-tesion_value24"><i class="fa fa-tag" aria-hidden="true"></i> Tension Value</label>
+                <input type="number" step="any" min="0" max="300" id="node-input-tesion_value24" placeholder="tesion_value" style="width:100%; ">
+            </div>
+        </div>
+    </div>
+    <!-- <div class="hr-div-setVoltage">
         <hr>
         <span class="optional">Optional</span>
         <hr>
     </div>
-
     <div class="form-row columm">
         <label style="width: 50% !important;" for="node-input-name" ><i class="fa fa-tag"></i> Component Nickname</label>
         <input type="text" id="node-input-name" placeholder="Name">
-    </div>
+    </div> -->
 </script>
 
 <script type="text/html" data-help-name="set_voltage">
