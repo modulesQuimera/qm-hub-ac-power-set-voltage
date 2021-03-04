@@ -2,71 +2,21 @@ module.exports = function(RED) {
 
     var mapeamentoNode;
 
-    // function multipleSetPhase(self, file, slot, currentMode) {
-    //     for (var t = 0; t < self.qtdSetVoltage; t++) {
-    //         var command_n = {
-    //             type: "AC_Power_Source_modular_V1_0",
-    //             slot: parseInt(mapeamentoNode.slot),
-    //             method: "set_voltage",
-    //             phase_selector: self.phase_selector_n[t],
-    //             tesion_value: parseFloat(self.tesion_value_n[t]),
-    //             get_output: {},
-    //             compare: {}
-    //         }
-    //         if (!(slot === "begin" || slot === "end")) {
-    //             if (currentMode == "test") {
-    //                 file.slots[slot].jig_test.push(command_n);
-    //             } else {
-    //                 file.slots[slot].jig_error.push(command_n);
-    //             }
-    //         } else {
-    //             if (slot === "begin") {
-    //                 file.slots[0].jig_test.push(command_n);
-    //             } else {
-    //                 file.slots[3].jig_test.push(command_n);
-    //             }
-    //         }
-    //     }
-    //     return file;
-    // }
-
     function SetVoltageNode(config) {
         RED.nodes.createNode(this, config);
         this.mapeamento = config.mapeamento;
-        this.phase_selector = config.phase_selector;
-        this.tesion_value = config.tesion_value;
-
-        this.phase_selectorA = config.phase_selector1;
-        this.phase_selectorB = config.phase_selector2;
-        this.phase_selectorC = config.phase_selector3;
-
-
-        // this.qtdSetVoltage = config.qtdSetVoltage;
-        // this.tesion_value_n = []; this.phase_selector_n = [];
-        // this.phase_selector_n.push(config.phase_selector1); this.tesion_value_n.push(config.tesion_value1);
-        // this.phase_selector_n.push(config.phase_selector2); this.tesion_value_n.push(config.tesion_value2);
-        // this.phase_selector_n.push(config.phase_selector3); this.tesion_value_n.push(config.tesion_value3);
-        // this.phase_selector_n.push(config.phase_selector4); this.tesion_value_n.push(config.tesion_value4);
-        // this.phase_selector_n.push(config.phase_selector5); this.tesion_value_n.push(config.tesion_value5);
-        // this.phase_selector_n.push(config.phase_selector6); this.tesion_value_n.push(config.tesion_value6);
-        // this.phase_selector_n.push(config.phase_selector7); this.tesion_value_n.push(config.tesion_value7);
-        // this.phase_selector_n.push(config.phase_selector8); this.tesion_value_n.push(config.tesion_value8);
-        // this.phase_selector_n.push(config.phase_selector9); this.tesion_value_n.push(config.tesion_value9);
-        // this.phase_selector_n.push(config.phase_selector10); this.tesion_value_n.push(config.tesion_value10);
-        // this.phase_selector_n.push(config.phase_selector11); this.tesion_value_n.push(config.tesion_value11);
-        // this.phase_selector_n.push(config.phase_selector12); this.tesion_value_n.push(config.tesion_value12);
-        // this.phase_selector_n.push(config.phase_selector13); this.tesion_value_n.push(config.tesion_value13);
-        // this.phase_selector_n.push(config.phase_selector14); this.tesion_value_n.push(config.tesion_value14);
-        // this.phase_selector_n.push(config.phase_selector15); this.tesion_value_n.push(config.tesion_value15);
-        // this.phase_selector_n.push(config.phase_selector16); this.tesion_value_n.push(config.tesion_value16);
-        // this.phase_selector_n.push(config.phase_selector17); this.tesion_value_n.push(config.tesion_value17);
-        // this.phase_selector_n.push(config.phase_selector18); this.tesion_value_n.push(config.tesion_value18);
-        // this.phase_selector_n.push(config.phase_selector19); this.tesion_value_n.push(config.tesion_value19);
-        // this.phase_selector_n.push(config.phase_selector20); this.tesion_value_n.push(config.tesion_value20);
-        // this.phase_selector_n.push(config.phase_selector21); this.tesion_value_n.push(config.tesion_value21);
-        // this.phase_selector_n.push(config.phase_selector22); this.tesion_value_n.push(config.tesion_value22);
-        // this.phase_selector_n.push(config.phase_selector23); this.tesion_value_n.push(config.tesion_value23);
-        // this.phase_selector_n.push(config.phase_selector24); this.tesion_value_n.push(config.tesion_value24);
+        this.type_mode = config.type_mode;
+        this.v_select = config.v_select;
+        this.VA = config.VA;
+        this.VB = config.VB;
+        this.VC = config.VC;
+        this.VN = config.VN;
+        this.VA_value = config.VA_value;
+        this.VB_value = config.VB_value;
+        this.VC_value = config.VC_value;
+        this.VA_value_solo = config.VA_value_solo;
+        this.VB_value_solo = config.VB_value_solo;
+        this.VC_value_solo = config.VC_value_solo;
 
         var node = this;
         mapeamentoNode = RED.nodes.getNode(this.mapeamento);
@@ -74,40 +24,62 @@ module.exports = function(RED) {
         node.on('input', function(msg, send, done) {
             var globalContext = node.context().global;
             var currentMode = globalContext.get("currentMode");
-            var command = {
-                type: "AC_Power_Source_modular_V1_0",
-                slot: parseInt(mapeamentoNode.slot),
-                method: "set_voltage",
-                // phase_selector: node.phase_selector,
-                tesion_value: parseFloat(node.tesion_value),
-                VA: node.phase_selectorA,
-                VB: node.phase_selectorB,
-                VC: node.phase_selectorC,
-                get_output: {},
-                compare: {}
-            };
+            var command = {};
+            if(node.type_mode === 'mono'){
+
+                var voltage_value;
+                if(node.v_select === 'VA'){ voltage_value = node.VA_value_solo === "" ? 0 : parseFloat(node.VA_value_solo); }
+                if(node.v_select === 'VB'){ voltage_value = node.VB_value_solo === "" ? 0 : parseFloat(node.VB_value_solo); }
+                if(node.v_select === 'VC'){ voltage_value = node.VC_value_solo === "" ? 0 : parseFloat(node.VC_value_solo); }
+
+                var mono_command = {
+                    type: "AC_power_source_virtual_V1_0", 
+                    slot: parseInt(mapeamentoNode.slot),
+                    method: "set_voltage_mono",
+                    compare:{},
+                    phase_select:0,
+                    voltage_value: voltage_value,
+                    VA: node.VA,
+                    VB: node.VB,
+                    VC: node.VC,
+                    VN: node.VN
+                };
+                command = mono_command;
+               
+            }else {
+
+                var tri_command = {
+                    type: "AC_power_source_virtual_V1_0",
+                    slot: parseInt(mapeamentoNode.slot),
+                    method: "set_voltage_tri",
+                    compare:{},
+                    voltage_A: node.VA_value === "" ? 0 : parseFloat( node.VA_value),
+                    voltage_B: node.VB_value === "" ? 0 : parseFloat( node.VB_value),
+                    voltage_C: node.VC_value === "" ? 0 : parseFloat( node.VC_value),
+                    VA: node.VA,
+                    VB: node.VB,
+                    VC: node.VC,
+                    VN: node.VN
+                };
+                command = tri_command;
+
+            }
             var file = globalContext.get("exportFile");
             var slot = globalContext.get("slot");
             if (!(slot === "begin" || slot === "end")) {
                 if (currentMode == "test") {
-                    file.slots[slot].jig_test.push(command);
-                    // file = multipleSetPhase(node, file, slot, currentMode);
+                    file.slots[slot].jig_test.push(command);  
                 } else {
                     file.slots[slot].jig_error.push(command);
-                    // file = multipleSetPhase(node, file, slot, currentMode);
                 }
             } else {
                 if (slot === "begin") {
                     file.slots[0].jig_test.push(command);
-                    // file = multipleSetPhase(node, file, slot, currentMode);
                 } else {
                     file.slots[3].jig_test.push(command);
-                    // file = multipleSetPhase(node, file, slot, currentMode);
                 }
             }
             globalContext.set("exportFile", file);
-            console.log("robsonnnnnnnnnnnnnnnnnn")
-            console.log(command);
             send(msg);
         });
     }
