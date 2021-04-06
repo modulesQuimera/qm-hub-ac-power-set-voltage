@@ -32,10 +32,11 @@
             var config_mapeamento = RED.nodes.node(this.mapeamento);
             if (config_mapeamento) {
 
-                document.getElementById("VA").innerText = "VA - PIN - 3 " + config_mapeamento.connectorVA + " - " + config_mapeamento.labelVA; 
-                document.getElementById("VB").innerText = "VB - PIN - 2 " + config_mapeamento.connectorVB + " - " + config_mapeamento.labelVB; 
-                document.getElementById("VC").innerText = "VC - PIN - 3 " + config_mapeamento.connectorVC + " - " + config_mapeamento.labelVC;
-                document.getElementById("VN").innerText = "VN - PIN - 2 " + config_mapeamento.connectorVN + " - " + config_mapeamento.labelVN;
+                document.getElementById("VN").innerHTML = `VN - PIN - 1 <br> ${config_mapeamento.connectorVN}`;
+                document.getElementById("VA").innerHTML = `VA - PIN - 2 <br> ${config_mapeamento.connectorVA}`; 
+                document.getElementById("VB").innerHTML = `VB - PIN - 3 <br> ${config_mapeamento.connectorVB}`; 
+                document.getElementById("VC").innerHTML = `VC - PIN - 4 <br> ${config_mapeamento.connectorVC}`;
+                
 
                 $("#node-input-VA_value").prop("max",config_mapeamento.voltage_limit);
                 $("#node-input-VB_value").prop("max",config_mapeamento.voltage_limit);
@@ -165,7 +166,7 @@
     .check{ width: 20px !important; margin-top: 0px !important; margin-bottom: 3px; }
     .label-check{ width: 200px !important; margin: 0px !important; }
     .row { display: flex; flex-direction: row; align-items: center; }
-    .row label { margin: 0; margin-left: 5px;}
+    .row label { margin: 0; margin-left: 5px; text-align: center;}
     .form-row2 { display: flex; flex-direction: row; justify-content: space-between;}
     .box-style { background: #e0e0e0; padding: 18px; border-radius: 4px; box-shadow: 0px 0px 7px 0px #868686; }
     .container-tester { display: flex; min-width: 620px; width: 100%; flex-direction: column; }
@@ -241,25 +242,25 @@
                 <div class="columm-25">
                     <div class="row">
                         <input class="check" type="checkbox" id="node-input-VA">
-                        <label id="VA" for="node-input-VA"slyle="margin-bottom: 0px">VA</label>
+                        <label id="VA" for="node-input-VA"slyle="margin-bottom: 0px; text-align: center;">VA</label>
                     </div>
                 </div>
                 <div class="columm-25">
                     <div class="row">
                         <input class="check" type="checkbox" id="node-input-VB">
-                        <label id="VB" for="node-input-VB" slyle="margin-bottom: 0px">VB</label>
+                        <label id="VB" for="node-input-VB" slyle="margin-bottom: 0px; text-align: center;">VB</label>
                     </div>
                 </div>
                 <div class="columm-25">
                     <div class="row">
                         <input class="check" type="checkbox" id="node-input-VC">
-                        <label id="VC" for="node-input-VC" slyle="margin-bottom: 0px">VC</label>
+                        <label id="VC" for="node-input-VC" slyle="margin-bottom: 0px; text-align: center;">VC</label>
                     </div>
                 </div>
                 <div class="columm-25">
                     <div class="row">
                         <input class="check" type="checkbox" id="node-input-VN">
-                        <label id="VN" for="node-input-VN" slyle="margin-bottom: 0px">VN</label>
+                        <label id="VN" for="node-input-VN" slyle="margin-bottom: 0px; text-align: center;">VN</label>
                     </div>
                 </div>
             </div>

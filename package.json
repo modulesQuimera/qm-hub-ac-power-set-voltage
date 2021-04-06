@@ -1,6 +1,6 @@
 {
   "name": "qm-ac-power-set-voltage",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Component set voltage | AC Power Source | Node-RED ",
   "main": "set_voltage.js",
   "scripts": {
